@@ -7,17 +7,29 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="API\Domain\Enum\**" />
+    <Compile Remove="API\Domain\Exception\**" />
+    <Compile Remove="Controllers\**" />
+    <Content Remove="API\Domain\Enum\**" />
+    <Content Remove="API\Domain\Exception\**" />
+    <Content Remove="Controllers\**" />
+    <EmbeddedResource Remove="API\Domain\Enum\**" />
+    <EmbeddedResource Remove="API\Domain\Exception\**" />
+    <EmbeddedResource Remove="Controllers\**" />
+    <None Remove="API\Domain\Enum\**" />
+    <None Remove="API\Domain\Exception\**" />
+    <None Remove="Controllers\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Folder Include="API\Data\Configuration\" />
     <Folder Include="API\Domain\Common\" />
     <Folder Include="API\Domain\Entity\" />
-    <Folder Include="API\Domain\Enum\" />
-    <Folder Include="API\Domain\Exception\" />
     <Folder Include="API\Domain\Policy\" />
     <Folder Include="API\DTO\" />
     <Folder Include="API\Mapping\" />
     <Folder Include="API\Middleware\" />
     <Folder Include="API\Service\" />
-    <Folder Include="Controllers\" />
   </ItemGroup>
 
   <ItemGroup>

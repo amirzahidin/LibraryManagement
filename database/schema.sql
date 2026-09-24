@@ -1,0 +1,41 @@
+CREATE	TABLE	Books	(
+				Id														INT	IDENTITY(1,1)	PRIMARY	KEY,
+				Title											NVARCHAR(200)	NOT	NULL,
+				Author										NVARCHAR(150)	NOT	NULL,
+				Isbn												NVARCHAR(20)		NOT	NULL,
+				PublishedYear			INT											NOT	NULL,
+				TotalCopies					INT											NOT	NULL,
+				AvailableCopies	INT											NOT	NULL,
+				CreatedAt							DATETIME2					NOT	NULL	DEFAULT	SYSUTCDATETIME(),
+				UpdatedAt							DATETIME2					NULL,
+				CONSTRAINT	UQ_Books_Isbn			UNIQUE	(Isbn),
+				CONSTRAINT	CK_Books_Copies	CHECK	(AvailableCopies	>=	0	AND	AvailableCopies	<=	TotalCopies)
+);
+CREATE	TABLE	Members	(
+				Id													INT	IDENTITY(1,1)	PRIMARY	KEY,
+				FullName							NVARCHAR(150)	NOT	NULL,
+				Email										NVARCHAR(200)	NOT	NULL,
+				MembershipType	NVARCHAR(20)		NOT	NULL,
+				IsActive							BIT											NOT	NULL	DEFAULT	1,
+				CreatedAt						DATETIME2					NOT	NULL	DEFAULT	SYSUTCDATETIME(),
+				UpdatedAt						DATETIME2					NULL,
+				CONSTRAINT	UQ_Members_Email	UNIQUE	(Email),
+				CONSTRAINT	CK_Members_Type		CHECK	(MembershipType	IN	('Standard',	'Premium'))
+);
+CREATE	TABLE	Loans	(
+				Id										INT	IDENTITY(1,1)	PRIMARY	KEY,
+				BookId						INT											NOT	NULL,
+				MemberId				INT											NOT	NULL,
+				BorrowedAt		DATETIME2					NOT	NULL,
+				DueDate					DATETIME2					NOT	NULL,
+				ReturnedAt		DATETIME2					NULL,
+				FineAmount		DECIMAL(10,2)	NOT	NULL	DEFAULT	0,
+				CreatedAt			DATETIME2					NOT	NULL	DEFAULT	SYSUTCDATETIME(),
+				UpdatedAt			DATETIME2					NULL,
+				CONSTRAINT	FK_Loans_Books			FOREIGN	KEY	(BookId) REFERENCES	Books(Id),
+				CONSTRAINT	FK_Loans_Members	FOREIGN	KEY	(MemberId)	REFERENCES	Members(Id),
+				CONSTRAINT	CK_Loans_Dates			CHECK	(DueDate	>	BorrowedAt)
+);
+CREATE	INDEX	IX_Loans_MemberId_ReturnedAt	ON	Loans	(MemberId,	ReturnedAt);
+CREATE	INDEX	IX_Loans_BookId	ON	Loans	(BookId);
+CREATE	INDEX	IX_Loans_DueDate_Active	ON	Loans	(DueDate)	WHERE	ReturnedAt	IS	NULL;
